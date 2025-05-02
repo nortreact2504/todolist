@@ -2,9 +2,13 @@ import { useState } from 'react'
 import './App.css'
 import ItemsList from './ItemsList'
 import AddTodo from './AddTodo'
+import { practice, asyncPractice } from './utils'
 
 function TodoMain() {
   const [count, setCount] = useState(0)
+
+  //practice()
+  asyncPractice()
 
   const [items, setItems] = useState([
     { id: 1, name: 'Õun', isDone: false, unit: 'kg' },
@@ -19,6 +23,16 @@ function TodoMain() {
     { id: 10, name: 'Pasta',isDone: false, unit: 'tk' }
   ])
 
+  const toggleDone = (id) => {
+    const newItems = items.map((item) => {
+      if (item.id === id) {
+        return { ...item, isDone: !item.isDone }
+      }
+      return item
+    })
+    setItems(newItems)
+  }
+
   const addNewTodo = (newTodo) => {
     console.log(newTodo)
     const newItem = {
@@ -30,11 +44,17 @@ function TodoMain() {
     setItems([...items, newItem])
   }
 
+  const deleteItem = (id) => {
+    console.log(id)
+    const newItems = items.filter((item) => item.id !== id)
+    setItems(newItems)
+  }
+
   return (
     <div className='container'>
       <h1>Minu ostukorv</h1>
       <AddTodo addNewTodo={addNewTodo} />
-      <ItemsList items={items} />
+      <ItemsList items={items} toggleDone={toggleDone} deleteItem={deleteItem} />
     </div>
   )
 }
