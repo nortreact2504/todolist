@@ -38,4 +38,50 @@ function asyncPractice() {
     console.log('kolmas')
 }
 
-export { practice, asyncPractice };
+async function fetchTodoData() {
+  const url = import.meta.env.VITE_SITE
+
+  const apiUrl = `${url}/api/task`
+
+  const response = await fetch(apiUrl)
+  if (!response.ok) {
+      throw new Error(`Error fetching data: ${response.statusText}`);
+  }
+  const data = await response.json();
+  return data.map((t) => {
+    return {
+      id: t.id,
+      name: t.nimetus,
+      isDone: t.kasTehtud,
+      unit: t.prioriteet
+    }
+  });
+
+}
+
+async function postTodoData({name, priority}) {
+  const url = import.meta.env.VITE_SITE
+
+  const apiUrl = `${url}/api/task`
+
+  const newTask = {
+    nimetus: name,
+    prioriteet: priority
+  }
+
+  const response = await fetch(
+    apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newTask)
+    }
+  )
+  if (!response.ok) {
+      throw new Error(`Error posting data: ${response.statusText}`);
+  }
+
+}
+
+export { practice, asyncPractice, fetchTodoData, postTodoData };
